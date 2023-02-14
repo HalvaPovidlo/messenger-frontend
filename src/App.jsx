@@ -4,73 +4,56 @@ import {
     redirect,
     RouterProvider,
     Route,
-    Routes,
-    BrowserRouter,
     createRoutesFromElements
 } from "react-router-dom";
+
 import RegisterForm from "./components/RegisterForm.jsx";
 import ErrorPage from "./components/error-page.jsx";
 import LoginForm from "./components/LoginForm.jsx";
 import Messenger from "./routes/Messenger";
+import Test from "./components/TEST.jsx";
 
 export default function App() {
-    /*  const [user, setUser] = useState({})
-      const [count, setCount] = useState(0)
-  // WARNING: For POST requests, body is set to null by browsers.
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      /*
-          const router = createBrowserRouter([
-              {
-                  path: "/",
 
-                  loader: async () => {
+    const [authData, setAuthData] = useState({login: "", password: ""})
 
-                      const user = 0;
-                      if (!user) {
-                          return redirect("/login");
-                      }
-                  },
-                  element:<Messenger/>
-              },
-              {
-                  path: "register",
-                  element: <RegisterForm></RegisterForm>,
-                  errorElement:<ErrorPage></ErrorPage>
-              },
-              {
-                  path: "login",
-                  props:{setUser},
-                  element: <LoginForm></LoginForm>,
-                  errorElement:<ErrorPage></ErrorPage>
-              },
-          ]);
-      */
+    // WARNING: For POST requests, body is set to null by browsers.
+
     const loader = async () => {
-        console.log(1)
-        const user = 0;
-        if (!user) {
+        if (!authData.login) {
             return redirect("/login");
         }
+        return true
     }
+
+    function logout() {
+        setAuthData({login: "", password: ""})
+    }
+
     const router = createBrowserRouter(
         createRoutesFromElements(
             <Route>
                 <Route
                     path={"/"}
+                    element={<Messenger logout={logout} authData={authData}/>}
+                    errorElement={<ErrorPage/>}
                     loader={loader}
-                    element={<Messenger/>}
-                    errorElement={<ErrorPage></ErrorPage>}
                 >
                 </Route>
                 <Route
-                    path={"login"}
-                    element={<LoginForm></LoginForm>}
+                    path={"/login"}
+                    element={<LoginForm setAuthData={setAuthData}
+                    />}
+                    errorElement={<ErrorPage/>}
+                />
+                <Route
+                    path={"/register"}
+                    element={<RegisterForm setAuthData={setAuthData}></RegisterForm>}
                     errorElement={<ErrorPage></ErrorPage>}
                 />
                 <Route
-                    path={"register"}
-                    element={<RegisterForm></RegisterForm>}
+                    path={"/test"}
+                    element={<Test></Test>}
                     errorElement={<ErrorPage></ErrorPage>}
                 />
             </Route>
