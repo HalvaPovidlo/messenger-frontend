@@ -1,10 +1,9 @@
-import React, {useState} from "react";
-import {Link, redirect, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import {getMessagesHistory, getUsers} from "../API/API.js";
 
 export default function LoginForm(props) {
     let navigate = useNavigate()
-
     const [formData, setFormData] = useState(
         {
             login: "",
@@ -12,6 +11,9 @@ export default function LoginForm(props) {
         }
     )
 
+    useEffect(()=>{
+        if(props.AuthData.login!="")navigate("/");
+    },[props.AuthData]);
 
     function onChange(e) {
         setFormData(prevData => ({
@@ -23,20 +25,20 @@ export default function LoginForm(props) {
     async function handleSubmit(e) {
         e.preventDefault();
         try {
-            let res = await getMessagesHistory(formData)
+            let res = await getMessagesHistory('7e95a358-f703-45e2-ae19-aa51102a94de',formData)
+
             let resText = await res.text();
             if (res.status == 200) {
-                props.setAuthData(formData);
-                navigate('/')
+               props.setAuthData(formData)
             } else {
-                alert("Check password")
+                alert("Check login and password")
             }
         } catch (err) {
             console.log(err)
         }
     }
 
-    return <form className="login_form" onSubmit={handleSubmit}>
+    return <form className="login-form" onSubmit={handleSubmit}>
         <label>Login: <br></br>
             <input name={"login"} className="form-input"
                    type={"text"} onChange={onChange} value={formData.login}></input>
@@ -45,7 +47,7 @@ export default function LoginForm(props) {
             <input name={"password"} className="form-input"
                    type={"password"} onChange={onChange} value={formData.password}></input>
         </label>
-        <button className={"login-button"}>Log in</button>
+        <button className={"login-form__button"}>Log in</button>
         <span>Don't have account yet? <Link to="../register">Register now</Link></span>
     </form>
 }

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {getMessagesHistory, registerUser} from "../API/API.js";
+import {registerUser} from "../API/API.js";
 
 export default function RegisterForm(props) {
     let navigate = useNavigate()
@@ -37,21 +37,20 @@ export default function RegisterForm(props) {
             delete user.password_repeat;
 
             let res = await registerUser(user)
-
-         //   let resJson = await res.text();
+            let resText = await res.text();
+            alert(resText)
+            //   let resJson = await res.text();
             if (res.status == 200) {
-                props.setAuthData({login: user.login, password: user.password});
-
+                props.setAuthData({login: user.login, password: user.password})//here we need to do it sync mb
                 navigate('/')
-            } else {
-                alert("Check password")
             }
+
         } catch (err) {
-            console.log(err)
+          alert(err)
         }
     }
 
-    return <form className="login_form">
+    return <form className="register-form">
         <label>Name: <br></br>
             <input name={"name"} className="form-input"
                    type={"text"} onChange={onChange} value={formData.name}></input>
@@ -72,7 +71,7 @@ export default function RegisterForm(props) {
             <input name={"password_repeat"} className="form-input"
                    type={"password"} onChange={onChange} value={formData.password_repeat}></input>
         </label>
-        <button className={"register-button"} onClick={handleSubmit}>Register</button>
+        <button className={"register-form__button"} onClick={handleSubmit}>Register</button>
         <span>Already registered? <Link to="../login">Login now</Link></span>
     </form>
 }

@@ -9,7 +9,7 @@ import {
 
 import RegisterForm from "./components/RegisterForm";
 import ErrorPage from "./components/error-page";
-import LoginForm from "./components/LoginForm";
+import LoginForm from "./components/LoginForm.jsx";
 import App from "./App.jsx";
 
 

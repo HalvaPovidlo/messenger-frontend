@@ -5,7 +5,9 @@ import {getMessagesHistory, getUsers} from "../API/API.js";
 export default function Test() {
 
     async function handleClick(e) {
-      await getUsers();
+      let rs = await getUsers();
+      let rsJson = await rs.json();
+      console.log(rsJson)
     }
 
     return <button onClick={handleClick}>ClickMe!</button>

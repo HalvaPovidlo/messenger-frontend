@@ -4,7 +4,7 @@ import {
     redirect,
     RouterProvider,
     Route,
-    createRoutesFromElements
+    createRoutesFromElements,
 } from "react-router-dom";
 
 import RegisterForm from "./components/RegisterForm.jsx";
@@ -15,12 +15,10 @@ import Test from "./components/TEST.jsx";
 
 export default function App() {
 
-    const [authData, setAuthData] = useState({login: "", password: ""})
-
-    // WARNING: For POST requests, body is set to null by browsers.
+    const [AuthData, setAuthData] = useState({login: "", password: ""})
 
     const loader = async () => {
-        if (!authData.login) {
+        if (!AuthData.login) {
             return redirect("/login");
         }
         return true
@@ -35,14 +33,14 @@ export default function App() {
             <Route>
                 <Route
                     path={"/"}
-                    element={<Messenger logout={logout} authData={authData}/>}
+                    element={<Messenger logout={()=>{logout()}} AuthData={AuthData}/>}
                     errorElement={<ErrorPage/>}
                     loader={loader}
                 >
                 </Route>
                 <Route
                     path={"/login"}
-                    element={<LoginForm setAuthData={setAuthData}
+                    element={<LoginForm AuthData={AuthData} setAuthData={setAuthData}
                     />}
                     errorElement={<ErrorPage/>}
                 />
