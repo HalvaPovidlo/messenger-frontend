@@ -17,7 +17,7 @@ export default function Messenger(props) {
     useEffect(() => {
         async function loadContacts() {
             try {
-                let res = await getUsers();
+                let res = await getUsers(AuthData);
                 let resJson = await res.json();
                 setContacts(resJson.users.filter(user => {
                     if (user.login != AuthData.login) return true

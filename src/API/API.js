@@ -31,9 +31,12 @@ export async function registerUser(user) {
     return fetch("http://localhost:9090/registration", requestOptions)
 }
 
-export async function getUsers() {
+export async function getUsers(AuthData) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", getAuthorizationHeader(AuthData));
     var requestOptions = {
         method: 'GET',
+        headers: myHeaders,
         redirect: 'follow'
     };
 
@@ -53,7 +56,7 @@ export async function sendMessage(contactId, AuthData, text) {
         method: 'POST',
         headers: myHeaders,
         body: raw,
-        redirect: 'follow'
+        redirect: 'follow',
     };
 
     return fetch(`http://localhost:9090/msg/${contactId}`, requestOptions)
