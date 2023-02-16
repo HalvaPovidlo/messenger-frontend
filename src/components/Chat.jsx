@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {getMessagesHistory, sendMessage} from "../API/API.js";
+import {AuthContext} from "../App.jsx";
 
 export default function Chat(props) {
-
+    const AuthData = useContext(AuthContext);
     const [currentMessage, setCurrentMessage] = useState("");
     const [history, setHistory] = useState([]);
 
     useEffect(() => {
         async function loadChatData() {
-            let response = await getMessagesHistory(props.currentContact.id, props.AuthData)
+            let response = await getMessagesHistory(props.currentContact.id, AuthData)
             let responseJson = await response.json()
             if (JSON.stringify(history) != JSON.stringify(response.history)) setHistory(responseJson.history)
         }
@@ -25,7 +26,7 @@ export default function Chat(props) {
 
     async function sendCurrentMessage() {
         try {
-            let response = await sendMessage(props.currentContact.id, props.AuthData, currentMessage);
+            let response = await sendMessage(props.currentContact.id, AuthData, currentMessage);
             let responseText = await response.text()
         } catch (err) {
             alert(err);
@@ -37,9 +38,9 @@ export default function Chat(props) {
             {history && <ul className={"chat__messages-list"}>
                 {history.map(message => (
                     <li className={"chat__message"}>
-                        <spanc
+                        <span
                             className={"chat__message-sender"}>{message.id === props.currentContact.id ? props.currentContact.name : "Me"}:<br/>
-                        </spanc>
+                        </span>
                         {message.text}</li>
                 ))}
             </ul>}

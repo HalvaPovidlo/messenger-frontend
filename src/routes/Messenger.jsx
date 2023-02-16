@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 
 import RegisterForm from "../components/RegisterForm.jsx";
 import LoginForm from "../components/LoginForm.jsx";
@@ -6,8 +6,9 @@ import ContactList from "../components/ContactList.jsx";
 import Chat from "../components/Chat";
 import {getUsers} from "../API/API.js";
 import {useNavigate} from "react-router-dom";
-
+import {AuthContext} from "../App.jsx";
 export default function Messenger(props) {
+    const AuthData = useContext(AuthContext)
     const [contacts, setContacts] = useState([]);
     const [userInfo, setUserInfo] = useState({})
     const [currentContact, setCurrentContact] = useState({id: "", name: "", surname: "", login: ""})
@@ -19,7 +20,7 @@ export default function Messenger(props) {
                 let res = await getUsers();
                 let resJson = await res.json();
                 setContacts(resJson.users.filter(user => {
-                    if (user.login != props.AuthData.login) return true
+                    if (user.login != AuthData.login) return true
                     else {
                         setUserInfo(user);
                         return false
@@ -48,7 +49,7 @@ export default function Messenger(props) {
                 <ContactList contacts={contacts} setCurrentContact={(contact) => {
                     setCurrentContact(contact);
                 }}></ContactList>
-                {currentContact.id && <Chat currentContact={currentContact} AuthData={props.AuthData}></Chat>}
+                {currentContact.id && <Chat currentContact={currentContact}></Chat>}
             </main>
 
         </div>

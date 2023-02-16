@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {getMessagesHistory, getUsers} from "../API/API.js";
-
+import {AuthContext} from "../App.jsx";
 export default function LoginForm(props) {
+    const AuthData=useContext(AuthContext);
     let navigate = useNavigate()
     const [formData, setFormData] = useState(
         {
@@ -12,8 +13,8 @@ export default function LoginForm(props) {
     )
 
     useEffect(()=>{
-        if(props.AuthData.login!="")navigate("/");
-    },[props.AuthData]);
+        if(AuthData.login!="")navigate("/");
+    },[AuthData]);
 
     function onChange(e) {
         setFormData(prevData => ({

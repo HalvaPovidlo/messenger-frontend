@@ -13,6 +13,8 @@ import LoginForm from "./components/LoginForm.jsx";
 import Messenger from "./routes/Messenger";
 import Test from "./components/TEST.jsx";
 
+export const AuthContext = React.createContext({login: "", password: ""});
+
 export default function App() {
 
     const [AuthData, setAuthData] = useState({login: "", password: ""})
@@ -33,14 +35,16 @@ export default function App() {
             <Route>
                 <Route
                     path={"/"}
-                    element={<Messenger logout={()=>{logout()}} AuthData={AuthData}/>}
+                    element={<Messenger logout={() => {
+                        logout()
+                    }} />}
                     errorElement={<ErrorPage/>}
                     loader={loader}
                 >
                 </Route>
                 <Route
                     path={"/login"}
-                    element={<LoginForm AuthData={AuthData} setAuthData={setAuthData}
+                    element={<LoginForm setAuthData={setAuthData}
                     />}
                     errorElement={<ErrorPage/>}
                 />
@@ -58,5 +62,8 @@ export default function App() {
         )
     );
 
-    return (<RouterProvider router={router}></RouterProvider>)
+    return (
+        <AuthContext.Provider value={AuthData}>
+            <RouterProvider router={router}></RouterProvider>
+        </AuthContext.Provider>)
 }
