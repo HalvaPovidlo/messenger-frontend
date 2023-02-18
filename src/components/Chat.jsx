@@ -23,11 +23,11 @@ export default function Chat(props) {
             clearInterval(intervalId)
         }
     }, [props.currentContact])
-    
+
     useEffect(() => {
         let historyElement = historyRef.current
         historyElement.scrollTo(0, historyElement.scrollHeight)
-    },[history.length])
+    }, [history ? history.length : null])
 
     async function sendCurrentMessage() {
         try {
