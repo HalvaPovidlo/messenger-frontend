@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import {getMessagesHistory, sendMessage} from "../API/API.js";
 import {AuthContext} from "../App.jsx";
@@ -7,7 +7,7 @@ export default function Chat(props) {
     const AuthData = useContext(AuthContext);
     const [currentMessage, setCurrentMessage] = useState("");
     const [history, setHistory] = useState([]);
-
+    const historyRef = useRef(null);
     useEffect(() => {
         async function loadChatData() {
             let response = await getMessagesHistory(props.currentContact.id, AuthData)
@@ -23,6 +23,11 @@ export default function Chat(props) {
             clearInterval(intervalId)
         }
     }, [props.currentContact])
+    
+    useEffect(() => {
+        let historyElement = historyRef.current
+        historyElement.scrollTo(0, historyElement.scrollHeight)
+    },[history.length])
 
     async function sendCurrentMessage() {
         try {
@@ -34,7 +39,7 @@ export default function Chat(props) {
     }
 
     return <div className={"chat"}>
-        <div className={"chat__history"}>
+        <div className={"chat__history"} ref={historyRef}>
             {history && <ul className={"chat__messages-list"}>
                 {history.map(message => (
                     <li className={"chat__message"}>
@@ -50,12 +55,12 @@ export default function Chat(props) {
             e.preventDefault();
             setCurrentMessage(e.target.value)
         }}></textarea>
-        <button className={"chat__send-button"} onClick={() => {
-           if(currentMessage)sendCurrentMessage().then(() => {
-                setCurrentMessage("")
-            })
-        }}>send
-        </button>
+            <button className={"chat__send-button"} onClick={() => {
+                if (currentMessage) sendCurrentMessage().then(() => {
+                    setCurrentMessage("")
+                })
+            }}>send
+            </button>
         </div>
     </div>
 }
